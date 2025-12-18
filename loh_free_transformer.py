@@ -588,6 +588,9 @@ class HierarchicalVAE(nn.Module):
         
         for _ in range(num_samples):
             tokens = torch.zeros(seq_len, dtype=torch.long, device=device)
+            # uniform first character
+            tokens[0] = torch.randint(0, self.cfg.vocab_size, (1,), device=device)
+
             # z_cache[layer] = [cached_len, num_codes]
             z_cache = [torch.empty(0, num_codes, device=device, dtype=dtype) for _ in range(depth)]
             
