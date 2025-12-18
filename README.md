@@ -1,4 +1,4 @@
-# Dual-Head Hierarchical VAE
+# Ladder of Heads Free Transformer
 
 Split-head attention VAE for character-level text modeling.
 
