@@ -4,6 +4,8 @@ Hierarchical VAE with split head attention.
 - Second H-N heads: causal (decoder)
 - Each layer is a VAE with binary latents
 - ladder prior
+
+todo: better init
 """
 
 import torch
@@ -275,8 +277,8 @@ class DualAttention(nn.Module):
         trunc_normal_(self.q_proj)
         trunc_normal_(self.k_proj)
         trunc_normal_(self.v_proj)
-        zero_init_(self.out_enc)
-        zero_init_(self.out_dec)
+        trunc_normal_(self.out_enc)
+        trunc_normal_(self.out_dec)
 
     def forward(self, x: torch.Tensor, block_mask: BlockMask, rope_cos: torch.Tensor, rope_sin: torch.Tensor):
         B, N, D = x.shape
@@ -310,7 +312,7 @@ class MLP(nn.Module):
         self.fc1 = nn.Linear(dim, dim * mult, bias=False)
         self.fc2 = nn.Linear(dim * mult, dim, bias=False)
         trunc_normal_(self.fc1)
-        zero_init_(self.fc2)
+        trunc_normal_(self.fc2)
 
     def forward(self, x):
         return self.fc2(F.relu(self.fc1(x)).square())
@@ -356,7 +358,7 @@ class VAELayer(nn.Module):
         # Init
         trunc_normal_(self.posterior_proj, std=0.02)
         trunc_normal_(self.prior_proj, std=0.02)
-        zero_init_(self.z_to_hidden)
+        trunc_normal_(self.z_to_hidden)
 
     def forward(
         self,
